@@ -22,6 +22,41 @@ app.get('/api/notes', (req, res) => {
   res.status(200).json(notesData);
 });
 
+app.post('/api/notes', (req, res) => {
+  console.info(`${req.method} request received to get reviews`);
+  const { title, text } = req.body;
+
+  if( title && text ) {
+    const newNote = {
+      title,
+      text,
+      id: uuid()
+    };
+    
+    console.log(newNote);
+    notesData.push(newNote);
+    console.log(notesData);
+
+    const noteString = JSON.stringify(notesData);
+
+    fs.writeFile(`./db/db.json`, noteString, (err) => 
+      err
+        ? console.error(err)
+        : console.log(`New note added for ${newNote.title}`)
+    );
+
+    const response = {
+      status: 'success',
+      body: newNote
+    };
+
+    console.log(response);
+    res.status(201).json(response);
+  } else {
+    res.status(500).json('Error in posting note');
+  }
+});
+
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
