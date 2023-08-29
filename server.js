@@ -33,9 +33,7 @@ app.post('/api/notes', (req, res) => {
       id: uuid()
     };
     
-    console.log(newNote);
     notesData.push(newNote);
-    console.log(notesData);
 
     const noteString = JSON.stringify(notesData);
 
@@ -69,7 +67,6 @@ app.delete('/api/notes/:id', (req, res) => {
       deleteNote = checkedNote;
       notesData.splice(i, 1);
 
-      console.log(notesData);
       const noteString = JSON.stringify(notesData);
 
       fs.writeFile(`./db/db.json`, noteString, (err) => 
@@ -97,9 +94,3 @@ app.get('*', (req, res) =>
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
 );
-
-// {
-//   "title": "Test Title",
-//   "text": "Test text",
-//   "id": "1234"
-// },
