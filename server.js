@@ -57,6 +57,39 @@ app.post('/api/notes', (req, res) => {
   }
 });
 
+app.delete('/api/notes/:id', (req, res) => {
+  console.info(`${req.method} request received to get reviews`);
+  const deleteId = req.params.id;
+  
+  for (let i = 0; i < notesData.length; i++) {
+    let deleteNote;
+    let checkedNote = notesData[i]
+
+    if (checkedNote.id === deleteId) {
+      deleteNote = checkedNote;
+      notesData.splice(i, 1);
+
+      console.log(notesData);
+      const noteString = JSON.stringify(notesData);
+
+      fs.writeFile(`./db/db.json`, noteString, (err) => 
+        err
+          ? console.error(err)
+          : console.log(`Notes updated for ${deleteNote.title} deletion`)
+      );
+
+      const response = {
+        status: 'success',
+        body: `${deleteNote.title} deleted`
+      };
+  
+      console.log(response);
+      return res.status(200).json(response);
+    };
+  };
+  res.status(500).json('Error in deleting note');
+});
+
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
@@ -64,3 +97,9 @@ app.get('*', (req, res) =>
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
 );
+
+// {
+//   "title": "Test Title",
+//   "text": "Test text",
+//   "id": "1234"
+// },
